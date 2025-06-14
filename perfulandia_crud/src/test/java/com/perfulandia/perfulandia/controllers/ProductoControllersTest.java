@@ -2,6 +2,7 @@ package com.perfulandia.perfulandia.controllers;
 
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,8 +22,10 @@ import com.perfulandia.perfulandia.services.ProductServiceImpl;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.mockito.ArgumentMatchers.any;
 
+
+@SpringBootTest
+@AutoConfigureMockMvc
 public class ProductoControllersTest {
     @Autowired
     private MockMvc mockmvc;
@@ -36,7 +39,6 @@ public class ProductoControllersTest {
     private List<Producto> productosLista;
 
     //VER TODOS LOS PRODUCTOS
-
     @Test
     public void verProductosTest() throws Exception{
         when(productoserviceimpl.findByAll()).thenReturn(productosLista);
@@ -46,8 +48,7 @@ public class ProductoControllersTest {
     }
 
     //ENCONTRAR UN SOLO PRODUCTO
-
-        @Test
+    @Test
     public void verunProductoTest(){
         Producto unProducto = new Producto(1L,"Channel Lestro", "Perfume de mujer 300ML",50000,100) ;
         try{
@@ -60,4 +61,26 @@ public class ProductoControllersTest {
             fail ("El testing arrojó un error "+ ex.getMessage());
         }
     }
+
+    //Buscar producto inexsistente
+    @Test
+    public void productoNoExisteTest() throws Exception{
+        when(productoserviceimpl.findById(20L)).thenReturn(Optional.empty());
+        mockmvc.perform((get("/api/productos/20"))
+        .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isNotFound());
+    }
+
+    //CREAR PRODUCTO
+    @Test
+    public void crearProductoTest() throws Exception{
+        Producto unProducto = new Producto(null, "Anto", "Perfume mixto 100ml", 100, 10);
+        Producto otroProducto = new Producto(12L, "Antonio Teteras Premium", "Perfume hombre 75ML",50000,5);
+        when (productoserviceimpl.save(any(Producto.class))).thenReturn(otroProducto);
+        mockmvc.perform(post("/api/productos")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(unProducto)))
+            .andExpect(status().isCreated());
+    }    
+
 }
