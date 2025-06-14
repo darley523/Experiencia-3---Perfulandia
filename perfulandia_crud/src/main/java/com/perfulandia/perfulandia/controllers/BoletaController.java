@@ -18,7 +18,6 @@ import com.perfulandia.perfulandia.services.BoletaService;
 import java.util.List;
 import java.util.Optional;
 
-
 @RestController
 @RequestMapping("api/boletas")
 public class BoletaController {
