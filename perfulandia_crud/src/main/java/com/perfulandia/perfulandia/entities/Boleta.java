@@ -16,7 +16,7 @@ public class Boleta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "numero_boleta")
-    private long numeroBoleta;
+    private Long numeroBoleta;
 
     @Column(name = "rut_comprador")
     private String rutComprador;
@@ -33,7 +33,7 @@ public class Boleta {
 
     }
 
-    public Boleta(long numeroBoleta, String rutComprador, int cantidadProductos, int precio, String fecha,
+    public Boleta(Long numeroBoleta, String rutComprador, int cantidadProductos, int precio, String fecha,
             String descripcion) {
         this.numeroBoleta = numeroBoleta;
         this.rutComprador = rutComprador;
@@ -46,11 +46,11 @@ public class Boleta {
     
     //GETTERS AND SETTERS
 
-    public long getNumeroBoleta() {
+    public Long getNumeroBoleta() {
         return numeroBoleta;
     }
 
-    public void setNumeroBoleta(long numeroBoleta) {
+    public void setNumeroBoleta(Long numeroBoleta) {
         this.numeroBoleta = numeroBoleta;
     }
 
