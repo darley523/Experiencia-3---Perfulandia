@@ -14,28 +14,24 @@ public class Envio {
     // ATRIBUTOS
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "num_envio")
+    @Column(name = "numero_envio")
     private Long numEnvio;
 
     @Column(name = "rut_comprador")
     private String rutComprador;
 
-    @Column(name = "num_boleta")
+    @Column(name = "numero_boleta")
     private Long numBoleta;
-
-    @Column(name = "num_pedido")
-    private Long numPedido;
 
     private String estado;
 
     public Envio() {
     }
 
-    public Envio(Long numEnvio, String rutComprador, Long numBoleta, Long numPedido, String estado) {
+    public Envio(Long numEnvio, String rutComprador, Long numBoleta, String estado) {
         this.numEnvio = numEnvio;
         this.rutComprador = rutComprador;
         this.numBoleta = numBoleta;
-        this.numPedido = numPedido;
         this.estado = estado;
     }
 
@@ -61,14 +57,6 @@ public class Envio {
 
     public void setNumBoleta(Long numBoleta) {
         this.numBoleta = numBoleta;
-    }
-
-    public Long getNumPedido() {
-        return numPedido;
-    }
-
-    public void setNumPedido(Long numPedido) {
-        this.numPedido = numPedido;
     }
 
     public String getEstado() {
