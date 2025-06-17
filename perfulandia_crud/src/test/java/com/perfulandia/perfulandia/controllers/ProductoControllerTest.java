@@ -22,6 +22,9 @@ import com.perfulandia.perfulandia.services.ProductServiceImpl;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 
 @SpringBootTest
@@ -83,4 +86,55 @@ public class ProductoControllerTest {
             .andExpect(status().isCreated());
     }    
 
+    // MODIFICAR PRODUCTO EXISTENTE
+    @Test
+    public void modificarProductoTest() throws Exception {
+        Producto original = new Producto(5L, "Old Perfume", "Descripción vieja", 30000, 15);
+        Producto modificado = new Producto(5L, "New Perfume", "Descripción nueva", 35000, 20);
+
+        when(productoserviceimpl.findById(5L)).thenReturn(Optional.of(original));
+        when(productoserviceimpl.save(any(Producto.class))).thenReturn(modificado);
+
+        mockmvc.perform(put("/api/productos/5")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(modificado)))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(modificado)));
+    }
+
+    // INTENTAR MODIFICAR PRODUCTO INEXISTENTE
+    @Test
+    public void modificarProductoNoExisteTest() throws Exception {
+        Producto modificado = new Producto(99L, "Nombre", "Desc", 10000, 1);
+
+        when(productoserviceimpl.findById(99L)).thenReturn(Optional.empty());
+
+        mockmvc.perform(put("/api/productos/99")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(modificado)))
+                .andExpect(status().isNotFound());
+    }
+
+    // ELIMINAR PRODUCTO EXISTENTE
+    @Test
+    public void eliminarProductoTest() throws Exception {
+        Producto productoEliminar = new Producto(7L, "Eliminar", "Desc", 12345, 2);
+
+        when(productoserviceimpl.delete(any(Producto.class))).thenReturn(Optional.of(productoEliminar));
+
+        mockmvc.perform(delete("/api/productos/7")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(productoEliminar)));
+    }
+
+    // INTENTAR ELIMINAR PRODUCTO INEXISTENTE
+    @Test
+    public void eliminarProductoNoExisteTest() throws Exception {
+        when(productoserviceimpl.delete(any(Producto.class))).thenReturn(Optional.empty());
+
+        mockmvc.perform(delete("/api/productos/999")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
 }

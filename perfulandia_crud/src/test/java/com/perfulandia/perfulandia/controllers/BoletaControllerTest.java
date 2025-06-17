@@ -22,6 +22,9 @@ import com.perfulandia.perfulandia.services.BoletaServiceImpl;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -82,4 +85,48 @@ public class BoletaControllerTest {
                 .content(objectMapper.writeValueAsString(nueva)))
                 .andExpect(status().isCreated());
     }
+
+    // Modificar boleta existente
+    @Test
+    public void modificarBoletaTest() throws Exception {
+        Boleta original = new Boleta(5L, "12.345.678-9", 3, 30000, "2024-06-17", "Compra original");
+        Boleta modificada = new Boleta(5L, "12.345.678-9", 5, 50000, "2024-06-18", "Compra modificada");
+
+        when(boletaServiceImpl.findById(5L)).thenReturn(Optional.of(original));
+        when(boletaServiceImpl.save(any(Boleta.class))).thenReturn(modificada);
+
+        mockmvc.perform(put("/api/boletas/5")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(modificada)))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(modificada)));
+    }
+
+    // Intentar modificar boleta inexistente
+    @Test
+    public void modificarBoletaNoExisteTest() throws Exception {
+        Boleta modificada = new Boleta(99L, "9.999.999-9", 1, 10000, "2024-06-17", "Mod inexistente");
+
+        when(boletaServiceImpl.findById(99L)).thenReturn(Optional.empty());
+
+        mockmvc.perform(put("/api/boletas/99")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(modificada)))
+                .andExpect(status().isNotFound());
+    }
+
+    // Eliminar boleta existente
+    @Test
+    public void eliminarBoletaTest() throws Exception {
+        Boleta boletaEliminar = new Boleta(7L, "22.222.222-2", 1, 10000, "2024-06-17", "Eliminar prueba");
+
+        when(boletaServiceImpl.delete(any(Boleta.class))).thenReturn(Optional.of(boletaEliminar));
+
+        mockmvc.perform(delete("/api/boletas/7")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(boletaEliminar)));
+    }
+
+
 }
