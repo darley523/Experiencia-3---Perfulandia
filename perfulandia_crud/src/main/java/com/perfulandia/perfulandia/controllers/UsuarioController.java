@@ -26,6 +26,7 @@ public class UsuarioController {
     @Autowired
     private UsuarioService service;
 
+    //Anotaciones para la documentacion del metodo findByAll
     @Operation(summary = "Obtener lista de usuarios", description = "Devuelve todos los usuarios disponibles")
     @ApiResponse(responseCode = "200", description = "Lista de usuarios retornada correctamente",
         content = @Content(mediaType = "application/json",
@@ -35,6 +36,7 @@ public class UsuarioController {
         return service.findByAll();
     }
 
+    //Anotaciones para la documentacion del metodo findById
     @Operation(summary = "Obtener usuario por RUT", description = "Obtiene el detalle de un usuario específico")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Usuario encontrado",
@@ -50,6 +52,7 @@ public class UsuarioController {
         return ResponseEntity.notFound().build();
     }
 
+    //Anotaciones para la documentacion del metodo crear
     @Operation(summary = "Crear un nuevo usuario", description = "Crea un usuario con los datos proporcionados")
     @ApiResponse(responseCode = "201", description = "Usuario creado correctamente",
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = Usuario.class)))
@@ -58,6 +61,7 @@ public class UsuarioController {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.save(user));
     }
 
+    //Anotaciones para la documentacion del metodo modificar
     @Operation(summary = "Modificar un usuario existente", description = "Actualiza los datos de un usuario según su RUT")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Usuario modificado correctamente",
@@ -79,6 +83,7 @@ public class UsuarioController {
         return ResponseEntity.notFound().build();
     }
 
+    //Anotaciones para la documentacion del metodo eliminar
     @Operation(summary = "Eliminar un usuario por RUT", description = "Elimina un usuario según su RUT")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Usuario eliminado correctamente",
