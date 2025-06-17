@@ -31,11 +31,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @RequestMapping("api/productos")
 public class ProductController {
 
+    
     //Para los test
-    @Autowired
-    private ProductService productoservices;
-
-
     @Autowired
     private ProductService service;
 
@@ -49,14 +46,13 @@ public class ProductController {
         return service.findByAll();
     }
 
-    //Anotaciones para la ducumentacion del metodo findById
+    //Anotaciones para la documentacion del metodo findById
     @Operation(summary = "Obtener producto por ID", description = "Obtiene el detalle de un producto específico")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Producto encontrado",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Producto.class))),
-        @ApiResponse(responseCode = "404", description = "Producto no encontrado")
+    @ApiResponse(responseCode = "200", description = "Producto encontrado",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = Producto.class))),
+    @ApiResponse(responseCode = "404", description = "Producto no encontrado")
     })
-
     @GetMapping("/{id}")
     public ResponseEntity<?> verDetalle(@PathVariable Long id){
         Optional<Producto> productoOptional = service.findById(id);
@@ -66,7 +62,7 @@ public class ProductController {
         return ResponseEntity.notFound().build();
     } 
 
-    //Anotaciones para la ducumentacion del metodo crear
+    //Anotaciones para la documentacion del metodo crear
     @Operation(summary = "Crear un nuevo producto", description = "Crea un producto con los datos proporcionados")
     @ApiResponse(responseCode = "201", description = "Producto creado correctamente",
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = Producto.class)))
@@ -75,7 +71,13 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.save(unProducto));
     }
 
-
+    //Anotaciones para la documentacion del metodo modificar
+    @Operation(summary = "Modificar un producto existente", description = "Actualiza los datos de un producto específico según su ID")
+    @ApiResponses(value = {
+    @ApiResponse(responseCode = "200", description = "Producto modificado correctamente",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = Producto.class))),
+    @ApiResponse(responseCode = "404", description = "Producto no encontrado")
+    })
     @PutMapping("/{id}")
     public ResponseEntity<?> modificar(@PathVariable Long id, @RequestBody Producto unProducto){
         Optional<Producto> productoOptional = service.findById(id);
@@ -91,7 +93,13 @@ public class ProductController {
         return ResponseEntity.notFound().build();
     }
 
-
+    //Anotaciones para la documentacion del metodo eliminar
+    @Operation(summary = "Eliminar producto por ID", description = "Elimina un producto existente identificado por su ID")
+    @ApiResponses(value = {
+    @ApiResponse(responseCode = "200", description = "Producto eliminado correctamente",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = Producto.class))),
+    @ApiResponse(responseCode = "404", description = "Producto no encontrado")
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminar(@PathVariable Long id){
         Producto unProducto = new Producto();
@@ -102,7 +110,5 @@ public class ProductController {
         }
         return ResponseEntity.notFound().build();
     }
-
-
 
 }
