@@ -10,7 +10,7 @@ import java.util.Optional;
 
 import com.perfulandia.perfulandia.entities.Envio;
 import com.perfulandia.perfulandia.repository.EnvioRepository;
-import com.perfulandia.perfulandia.services.EnvioServiceImpl;
+//import com.perfulandia.perfulandia.services.EnvioServiceImpl;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
